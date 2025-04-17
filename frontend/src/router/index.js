@@ -42,22 +42,12 @@ const router = createRouter({
   },
 });
 
-router.beforeEach(async (to) => {
-  if (to.meta.requiresAuth) {
-    const auth = useAuthStore()
-    await auth.init() // 等待初始化完成
-
-    if (!auth.user?.token) {
-      return '/login?redirect=' + encodeURIComponent(to.path)
-    }
-  }
-})
-
-router.onError((error) => {
-  console.error('Router error:', error);
-  if (error.message.includes('parentNode')) {
-    // 特定错误处理
-    console.warn('DOM操作在组件卸载后发生');
+router.beforeEach((to, from, next) => {
+  const authStore = useAuthStore();
+  if (to.meta.requiresAuth && !authStore.user) {
+    next('/login');
+  } else {
+    next();
   }
 });
 

@@ -4,18 +4,23 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.bupt.backend.entity.Post;
-import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 import java.util.List;
 
+@Mapper
 public interface PostMapper extends BaseMapper<Post> {
-    // 自定义复杂查询
-    @Select("SELECT p.* FROM posts p " +
-            "JOIN post_categories pc ON p.post_id = pc.post_id " +
-            "WHERE pc.category_id = #{categoryId}")
+    @Select("SELECT * FROM posts WHERE user_id = #{userId} AND status = 'published' ORDER BY publish_at DESC LIMIT #{limit}")
+    List<Post> selectRecentPosts(Integer userId, Integer limit);
+
+    @Select("SELECT * FROM posts WHERE category_id = #{categoryId} AND status = 'published' ORDER BY publish_at DESC")
     List<Post> selectByCategoryId(Integer categoryId);
 
-    // 分页查询
-    IPage<Post> selectPublishedPosts(Page<Post> page, @Param("status") String status);
+    @Select("SELECT COUNT(*) FROM posts WHERE user_id = #{userId} AND status = 'published'")
+    Integer countPublishedPosts(Integer userId);
+
+    @Update("UPDATE posts SET view_count = view_count + 1 WHERE post_id = #{postId}")
+    int incrementViewCount(Integer postId);
 }

@@ -1,6 +1,8 @@
-package com.bupt.backend.common;// GlobalExceptionHandler.java
+package com.bupt.backend.common;
+
 import org.springframework.validation.FieldError;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -8,9 +10,9 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-@Slf4j  // 添加日志注解
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+    private static final Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
     // 修正参数校验异常处理
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -34,8 +36,8 @@ public class GlobalExceptionHandler {
 
     // 系统异常处理
     @ExceptionHandler(Exception.class)
-    public Result<String> handleException(Exception ex) {
-        log.error("系统异常", ex);
-        return Result.error(500, "系统繁忙，请稍后再试");
+    public Result<String> handleException(Exception e) {
+        log.error("发生异常: ", e);
+        return Result.error(500, e.getMessage());
     }
 }

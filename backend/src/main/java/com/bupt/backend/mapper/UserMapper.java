@@ -9,4 +9,6 @@ import org.apache.ibatis.annotations.Select;
 public interface UserMapper extends BaseMapper<User> {
     @Select("SELECT EXISTS(SELECT 1 FROM users WHERE username = #{username})")
     boolean existsByUsername(String username);
+    
+    User selectByUsername(String username);
 }

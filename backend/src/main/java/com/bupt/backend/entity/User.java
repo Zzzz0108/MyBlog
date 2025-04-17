@@ -17,7 +17,7 @@ import java.util.Collections;
 
 
 @Data
-@TableName( "users")
+@TableName("users")
 public class User implements UserDetails {
     @TableId(type = IdType.AUTO)
     private Integer userid;
@@ -26,14 +26,21 @@ public class User implements UserDetails {
     private String email;
     private String avatar;
     private String bio;
+    
+    @TableField("post_count")
     private Integer postCount = 0;
+    
+    @TableField("like_count")
     private Integer likeCount = 0;
+    
+    @TableField("view_count")
     private Integer viewCount = 0;
 
     @TableField("create_at")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createAt;
 
+    @TableField("last_login")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime lastLogin;
 

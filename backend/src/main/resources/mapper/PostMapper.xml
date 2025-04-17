@@ -1,6 +1,16 @@
-<mapper namespace="com.yourdomain.mapper.PostMapper">
-    <resultMap id="BaseResultMap" type="com.yourdomain.entity.Post">
-        <!-- 字段映射 -->
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bupt.backend.mapper.PostMapper">
+    <resultMap id="BaseResultMap" type="com.bupt.backend.entity.Post">
+        <id column="post_id" property="postId"/>
+        <result column="title" property="title"/>
+        <result column="content" property="content"/>
+        <result column="status" property="status"/>
+        <result column="create_at" property="createAt"/>
+        <result column="update_at" property="updateAt"/>
+        <result column="user_id" property="userId"/>
+        <result column="view_count" property="viewCount"/>
+        <result column="like_count" property="likeCount"/>
     </resultMap>
 
     <select id="selectPublishedPosts" resultMap="BaseResultMap">

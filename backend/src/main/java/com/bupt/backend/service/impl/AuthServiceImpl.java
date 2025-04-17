@@ -8,16 +8,21 @@ import com.bupt.backend.dto.RegisterRequest;
 import com.bupt.backend.entity.User;
 import com.bupt.backend.mapper.UserMapper;
 import com.bupt.backend.service.AuthService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.time.LocalDateTime;
 
 // AuthServiceImpl.java
 @Service
 public class AuthServiceImpl implements AuthService {
+    private static final Logger logger = LoggerFactory.getLogger(AuthServiceImpl.class);
+    
     @Autowired
     private UserMapper userMapper;
 
@@ -34,16 +39,33 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public Result<String> register(RegisterRequest request) {
+        logger.info("开始注册用户: {}", request.getUsername());
+        
         if (userMapper.existsByUsername(request.getUsername())) {
+            logger.warn("用户名已存在: {}", request.getUsername());
             return Result.error(400, "用户名已存在");
         }
 
         User user = new User();
         user.setUsername(request.getUsername());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
+        user.setCreateAt(LocalDateTime.now());
+        user.setPostCount(0);
+        user.setLikeCount(0);
+        user.setViewCount(0);
+        user.setEmail(request.getUsername() + "@example.com"); // 设置默认邮箱
+        user.setAvatar(""); // 设置默认头像为空
+        user.setBio(""); // 设置默认简介为空
 
-        userMapper.insert(user);
-        return Result.success("注册成功");
+        try {
+            logger.info("准备插入用户数据: {}", user);
+            int result = userMapper.insert(user);
+            logger.info("用户插入结果: {}", result);
+            return Result.success("注册成功");
+        } catch (Exception e) {
+            logger.error("注册失败: ", e);
+            return Result.error(500, "注册失败：" + e.getMessage());
+        }
     }
 
     @Override

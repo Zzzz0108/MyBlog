@@ -3,16 +3,23 @@ import axios from 'axios';
 
 const api = axios.create({
     baseURL: '/api',
-    headers: { 'Content-Type': 'application/json' },
+    headers: { 
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+    },
     withCredentials: true // 关键：允许跨域携带Cookie
 });
 
-// 移除请求拦截器中的手动Token添加
+// 请求拦截器
 api.interceptors.request.use((config) => {
-    return config; // 不再手动添加Authorization头
+    const token = localStorage.getItem('token');
+    if (token) {
+        config.headers['Authorization'] = `Bearer ${token}`;
+    }
+    return config;
 });
 
-// 响应拦截器保持不变
+// 响应拦截器
 api.interceptors.response.use(
     response => response.data,
     error => {

@@ -13,11 +13,14 @@ import java.time.LocalDateTime;
 public class Category {
     @TableId(type = IdType.AUTO)
     private Integer categoryId;
-
-    private String name;
-    private String slug;
-    private String description;
+    private Integer userId;  // 分类所属用户
+    private String name;     // 分类名称
+    private String description; // 分类描述
+    private Integer postCount; // 该分类下的文章数
 
     @TableField("create_at")
     private LocalDateTime createAt;
+
+    @TableField("update_at")
+    private LocalDateTime updateAt;
 }

@@ -125,10 +125,12 @@ const submitForm = async () => {
     ElMessage.success('注册成功！')
     router.push('/')
   } catch (error) {
-    if (error.response) {
-      const msg = error.response.data.message || '注册失败'
-      ElMessage.error(msg)
+    if (error.response?.data) {
+      ElMessage.error(error.response.data.message || '注册失败，请稍后重试')
+    } else {
+      ElMessage.error('注册失败，请检查网络连接')
     }
+    console.error('注册错误:', error)
   } finally {
     loading.value = false
   }
