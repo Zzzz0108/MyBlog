@@ -18,5 +18,9 @@ app.use(ElementPlus)
 for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
     app.component(key, component)
 }
+// 应用启动时清除旧缓存
+if (performance.navigation.type === 1) { // 页面刷新
+    localStorage.removeItem('user');
+}
 
 app.mount('#app')

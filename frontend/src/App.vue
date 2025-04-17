@@ -114,9 +114,11 @@
 import { ref, onMounted, onUnmounted } from 'vue'
 import { EditPen, Promotion, ChatLineRound, Collection, Service  } from '@element-plus/icons-vue'
 import { useAuthStore } from '@/stores/auth'
+import { storeToRefs } from 'pinia'
 
 const auth = useAuthStore()
 const isScrolled = ref(false)
+const { user } = storeToRefs(auth) // 使用响应式解构
 
 const navLinks = [
   { path: '/', name: '首页' },

@@ -1,7 +1,7 @@
 <template>
   <div class="home-view">
     <!-- 已登录用户看到的个人主页 -->
-    <div v-if="user" class="user-home">
+    <div v-if="auth.user" class="user-home">
       <user-dashboard :user="auth.user" />
     </div>
     <!-- 未登录用户看到的公开页面 -->
@@ -56,6 +56,7 @@
 
 <script setup>
 import { MagicStick, Notebook, Picture, User } from '@element-plus/icons-vue'
+import { storeToRefs } from 'pinia'
 import { useAuthStore } from '@/stores/auth'
 import UserDashboard from '@/components/UserDashboard.vue'
 import { watch } from 'vue';
