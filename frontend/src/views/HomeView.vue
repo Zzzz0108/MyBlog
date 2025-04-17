@@ -1,7 +1,7 @@
 <template>
   <div class="home-view">
     <!-- 已登录用户看到的个人主页 -->
-    <div v-if="auth.user" class="user-home">
+    <div v-if="user" class="user-home">
       <user-dashboard :user="auth.user" />
     </div>
     <!-- 未登录用户看到的公开页面 -->
@@ -58,8 +58,18 @@
 import { MagicStick, Notebook, Picture, User } from '@element-plus/icons-vue'
 import { useAuthStore } from '@/stores/auth'
 import UserDashboard from '@/components/UserDashboard.vue'
+import { watch } from 'vue';
 
+
+// 正确获取 store 和响应式 user
 const auth = useAuthStore()
+const { user } = storeToRefs(auth) // 保持响应式
+
+// 安全监听
+watch(user, (newVal) => {
+  console.log('用户状态变化:', newVal)
+}, { immediate: true })
+
 const slides = [
   {
     title: '极简写作体验',

@@ -42,15 +42,16 @@ const router = createRouter({
   },
 });
 
-router.beforeEach((to, from, next) => {
-  const authStore = useAuthStore();
-  const isAuthenticated = !!authStore.user?.token;
-  if (to.meta.requiresAuth && !isAuthenticated) {
-    next('/login?redirect=' + encodeURIComponent(to.fullPath));
-  } else {
-    next();
+router.beforeEach(async (to) => {
+  if (to.meta.requiresAuth) {
+    const auth = useAuthStore()
+    await auth.init() // 等待初始化完成
+
+    if (!auth.user?.token) {
+      return '/login?redirect=' + encodeURIComponent(to.path)
+    }
   }
-});
+})
 
 router.onError((error) => {
   console.error('Router error:', error);

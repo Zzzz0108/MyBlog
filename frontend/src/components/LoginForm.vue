@@ -56,15 +56,14 @@ onBeforeUnmount(() => {
   isMounted.value = false;
 });
 const handleSubmit = async () => {
+  console.log('handleSubmit 被触发');// 调试1
   try {
+    console.log('尝试登录:', username.value, password.value); // 调试2
     await auth.login(username.value, password.value);
-    if (!isMounted.value) return;
+    console.log('登录请求完成');// 调试3
     // 登录成功后，auth.js中的login方法已经处理了跳转
   } catch (error) {
-    if (!isMounted.value) return;
-    // 更详细的错误处理
-    console.error('Login error:', error);
-    // 错误处理
+    console.error('登录失败:', error); // 调试4
   }
 };
 

@@ -71,28 +71,28 @@ export const useAuthStore = defineStore('auth', () => {
         };
     }
 
-    // 立即初始化
-    initUser();
 
+
+    // src/stores/auth.js
     const login = async (username, password) => {
         try {
-            error.value = null; // 清除之前的错误
+            console.log('调用 auth.login'); // 调试5
+            error.value = null;
             const response = await api.post('/auth/login', { username, password });
-            // 获取完整用户数据
-            const { data: userInfo } = await api.get(`/auth/user/${response.data.userid}`);
-
+            console.log('登录响应:', response); // 调试6
+            // 从响应中获取用户数据（后端需返回）
             user.value = {
-                ...userInfo,
-                token: response.data.token
+                ...response.data, // 假设后端返回用户信息
+                token: response.data.token // 确保后端返回了 token
             };
 
+            // 跳转到首页
             localStorage.setItem('user', JSON.stringify(user.value));
-
-            // 登录成功后跳转到首页或之前尝试访问的页面
-            const redirect = router.currentRoute.value.query.redirect || '/';
-            router.push(redirect);
+            console.log('更新后的用户状态:', user.value); // 调试：检查 Pinia 状态
+            router.push('/');
         } catch (err) {
             error.value = err.response?.data?.message || 'Login failed';
+            console.error('Auth.login 错误:', error); // 调试7
             throw err;
         }
     };
@@ -112,20 +112,17 @@ export const useAuthStore = defineStore('auth', () => {
         }
     };
 
+    // src/stores/auth.js
     const logout = async () => {
         try {
-            // 可选：通知后端注销
-            await api.post('/auth/logout');
-        } catch (e) {
-            console.error('Logout error:', e);
-        } finally {
-            // 清除状态
+            // 不再调用API，直接清除前端状态
             user.value = getDefaultUser();
             localStorage.removeItem('user');
-            delete api.defaults.headers.common['Authorization'];
 
-            // 跳转到首页，不需要强制刷新
-            router.push('/');
+            // 强制刷新页面以清除Session（确保后端Session失效）
+            window.location.href = '/';
+        } catch (e) {
+            console.error('Logout error:', e);
         }
     };
 
