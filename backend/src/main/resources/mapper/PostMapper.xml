@@ -1,0 +1,15 @@
+<mapper namespace="com.yourdomain.mapper.PostMapper">
+    <resultMap id="BaseResultMap" type="com.yourdomain.entity.Post">
+        <!-- 字段映射 -->
+    </resultMap>
+
+    <select id="selectPublishedPosts" resultMap="BaseResultMap">
+        SELECT * FROM posts
+        <where>
+            <if test="status != null">
+                status = #{status}
+            </if>
+        </where>
+        ORDER BY create_at DESC
+    </select>
+</mapper>
