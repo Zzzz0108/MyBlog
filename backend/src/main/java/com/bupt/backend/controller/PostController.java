@@ -53,9 +53,10 @@ public class PostController {
         return postService.getPostsByCategory(categoryId);
     }
 
-    @PostMapping("/{postId}/cover")
-    public Result<String> uploadCoverImage(@PathVariable Integer postId, @RequestParam("file") MultipartFile file) {
-        return postService.uploadCoverImage(postId, file);
+    @PostMapping("/cover")
+    public Result<String> uploadCoverImage(@RequestParam("file") MultipartFile file, Authentication authentication) {
+        Integer userId = ((com.bupt.backend.entity.User) authentication.getPrincipal()).getUserid();
+        return postService.uploadCoverImage(userId, file);
     }
 
     @PostMapping("/{postId}/view")

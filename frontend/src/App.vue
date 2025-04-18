@@ -133,9 +133,21 @@ const handleScroll = () => {
 onMounted(() => {
   window.addEventListener('scroll', handleScroll)
   // 从 localStorage 恢复状态
-  if (localStorage.getItem('token') && localStorage.getItem('user')) {
-    auth.token = localStorage.getItem('token')
-    auth.user = JSON.parse(localStorage.getItem('user'))
+  const storedToken = localStorage.getItem('token')
+  const storedUser = localStorage.getItem('user')
+  if (storedToken && storedUser) {
+    try {
+      auth.token = storedToken
+      auth.user = JSON.parse(storedUser)
+      console.log('从 localStorage 恢复用户状态成功:', auth.user)
+    } catch (error) {
+      console.error('恢复用户状态失败:', error)
+      // 如果解析失败，清除无效数据
+      localStorage.removeItem('token')
+      localStorage.removeItem('user')
+      auth.token = null
+      auth.user = null
+    }
   }
 })
 

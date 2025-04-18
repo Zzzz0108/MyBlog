@@ -96,4 +96,15 @@ public class CategoryServiceImpl implements CategoryService {
             return Result.error(500, "获取用户分类数量失败: " + e.getMessage());
         }
     }
+
+    @Override
+    public Result<List<Category>> getAllCategories() {
+        try {
+            List<Category> categories = categoryMapper.selectList(null);
+            return Result.success(categories);
+        } catch (Exception e) {
+            logger.error("获取所有分类失败: ", e);
+            return Result.error(500, "获取所有分类失败: " + e.getMessage());
+        }
+    }
 } 

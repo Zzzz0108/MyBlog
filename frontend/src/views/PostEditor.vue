@@ -28,7 +28,8 @@
         <el-form-item label="封面">
           <el-upload
             class="cover-uploader"
-            action="/api/posts/cover"
+            :action="uploadUrl"
+            :headers="uploadHeaders"
             :show-file-list="false"
             :on-success="handleCoverSuccess"
             :before-upload="beforeCoverUpload">
@@ -92,6 +93,11 @@ const toolbar = {
   preview: true
 }
 
+const uploadUrl = '/api/posts/cover'
+const uploadHeaders = {
+  Authorization: `Bearer ${localStorage.getItem('token')}`
+}
+
 onMounted(async () => {
   // 获取分类列表
   const res = await getCategories()
@@ -139,20 +145,26 @@ const handlePublish = async () => {
   }
 }
 
-const handleCoverSuccess = (res) => {
-  if (res.code === 200) {
-    postForm.value.coverImage = res.data
-    ElMessage.success('封面上传成功')
+const handleCoverSuccess = (response) => {
+  if (response.code === 200) {
+    postForm.value.coverImage = response.data
+    ElMessage.success('封面图片上传成功')
+  } else {
+    ElMessage.error(response.msg || '上传失败')
   }
 }
 
 const beforeCoverUpload = (file) => {
   const isImage = file.type.startsWith('image/')
+  const isLt2M = file.size / 1024 / 1024 < 2
+
   if (!isImage) {
-    ElMessage.error('只能上传图片文件')
-    return false
+    ElMessage.error('只能上传图片文件！')
   }
-  return true
+  if (!isLt2M) {
+    ElMessage.error('图片大小不能超过 2MB！')
+  }
+  return isImage && isLt2M
 }
 
 const handleUploadImage = async (event, insertImage, files) => {

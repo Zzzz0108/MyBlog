@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia';
 import { ref, computed } from 'vue';
 import { useRouter } from 'vue-router';
-import request from '@/utils/request';
+import { login as loginApi, register as registerApi } from '@/api/auth';
 
 export const useAuthStore = defineStore('auth', () => {
     const router = useRouter();
@@ -48,18 +48,15 @@ export const useAuthStore = defineStore('auth', () => {
         
         try {
             console.log('开始登录请求...');
-            const response = await request({
-                url: '/api/auth/login',
-                method: 'post',
-                data: { username, password }
-            });
+            const response = await loginApi({ username, password });
             console.log('登录响应:', response);
             
             if (response.code === 200 && response.data) {
                 const authData = response.data;
                 
-                if (!authData.token || !authData.userid) {
-                    throw new Error('服务器返回的认证数据不完整');
+                // 验证token格式
+                if (!authData.token || typeof authData.token !== 'string') {
+                    throw new Error('服务器返回的token格式无效');
                 }
                 
                 // 构建用户对象
@@ -75,23 +72,19 @@ export const useAuthStore = defineStore('auth', () => {
                 };
                 
                 user.value = userData;
-                token.value = authData.token;
+                // 确保 token 格式正确
+                const formattedToken = authData.token.startsWith('Bearer ') ? authData.token : `Bearer ${authData.token}`;
+                token.value = formattedToken;
                 localStorage.setItem('user', JSON.stringify(userData));
-                localStorage.setItem('token', authData.token);
+                localStorage.setItem('token', formattedToken);
                 console.log('登录成功，用户信息:', userData);
-                console.log('设置的 token:', authData.token);
+                console.log('设置的 token:', formattedToken);
                 router.push('/');
             } else {
                 throw new Error(response.msg || '登录失败');
             }
         } catch (err) {
-            console.error('登录失败:', err);
-            error.value = err.response?.data?.msg || err.message || '登录失败';
-            // 清除可能存在的无效数据
-            user.value = null;
-            token.value = null;
-            localStorage.removeItem('user');
-            localStorage.removeItem('token');
+            error.value = err.message;
             throw err;
         } finally {
             isLoading.value = false;
@@ -108,11 +101,7 @@ export const useAuthStore = defineStore('auth', () => {
         error.value = null;
         
         try {
-            const response = await request({
-                url: '/api/auth/register',
-                method: 'post',
-                data: credentials
-            });
+            const response = await registerApi(credentials);
             
             if (response.code === 200) {
                 await login(credentials.username, credentials.password);
@@ -134,13 +123,13 @@ export const useAuthStore = defineStore('auth', () => {
         token.value = null;
         localStorage.removeItem('user');
         localStorage.removeItem('token');
-        router.push('/');
+        router.push('/login');
     };
 
     const isAuthenticated = computed(() => {
-        const authenticated = !!token.value && !!user.value;
-        console.log('检查认证状态:', authenticated, '用户信息:', user.value);
-        return authenticated;
+        const authenticated = !!token.value
+        console.log('检查认证状态:', authenticated, 'Token:', token.value)
+        return authenticated
     });
 
     return { 

@@ -26,7 +26,7 @@
 <script setup>
 import { ref, watch } from 'vue';
 import { useAuthStore } from '@/stores/auth';
-import api from '@/utils/api';
+import request from '@/utils/request';
 
 const auth = useAuthStore();
 const form = ref({
@@ -46,7 +46,11 @@ watch(() => auth.user, (user) => {
 
 const updateProfile = async () => {
   try {
-    const response = await api.put('/auth/profile', form.value);
+    const response = await request({
+      url: '/auth/profile',
+      method: 'put',
+      data: form.value
+    });
     auth.user = { ...auth.user, ...response.data };
   } catch (error) {
     console.error('更新失败:', error);

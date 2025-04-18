@@ -1,11 +1,9 @@
 import axios from 'axios'
 import { ElMessage } from 'element-plus'
-import { useAuthStore } from '@/stores/auth'
-import { useRouter } from 'vue-router'
 
 // 创建 axios 实例
 const service = axios.create({
-  baseURL: '/', // 移除 /api 前缀，因为我们在每个 API 调用中都已经包含了
+  baseURL: 'http://localhost:9090/api',
   timeout: 10000,
   retry: 3,
   retryDelay: 1000
@@ -16,7 +14,16 @@ service.interceptors.request.use(
   config => {
     const token = localStorage.getItem('token')
     if (token) {
-      config.headers['Authorization'] = `Bearer ${token}`
+      try {
+        // 确保 token 格式正确
+        const formattedToken = token.startsWith('Bearer ') ? token : `Bearer ${token}`
+        config.headers['Authorization'] = formattedToken
+        console.log('发送请求，Authorization header:', formattedToken)
+      } catch (error) {
+        console.error('Token处理错误:', error)
+      }
+    } else {
+      console.warn('未找到 token')
     }
     return config
   },
@@ -44,8 +51,8 @@ service.interceptors.response.use(
           // 未授权，清除用户信息并跳转到登录页
           localStorage.removeItem('token')
           localStorage.removeItem('user')
-          const router = useRouter()
-          router.push('/login')
+          window.location.href = '/login'
+          ElMessage.error('登录已过期，请重新登录')
           break
         case 403:
           // 禁止访问

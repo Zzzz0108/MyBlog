@@ -72,10 +72,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     logger.info("用户 {} 认证成功", username);
                 } else {
                     logger.warn("JWT token 无效");
+                    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                    response.getWriter().write("{\"code\":401,\"msg\":\"Token无效或已过期\"}");
+                    return;
                 }
             }
         } catch (Exception e) {
             logger.error("处理 JWT token 时发生错误", e);
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.getWriter().write("{\"code\":401,\"msg\":\"认证失败: " + e.getMessage() + "\"}");
+            return;
         }
 
         filterChain.doFilter(request, response);

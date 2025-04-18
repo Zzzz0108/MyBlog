@@ -13,6 +13,6 @@ public interface PostService {
     Result<Post> getPostById(Integer postId);
     Result<List<Post>> getRecentPosts(Integer userId, Integer limit);
     Result<List<Post>> getPostsByCategory(Integer categoryId);
-    Result<String> uploadCoverImage(Integer postId, MultipartFile file);
+    Result<String> uploadCoverImage(Integer userId, MultipartFile file);
     Result<Void> incrementViewCount(Integer postId);
 } 

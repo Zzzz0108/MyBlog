@@ -54,4 +54,9 @@ public class CategoryController {
         User user = (User) authentication.getPrincipal();
         return categoryService.getUserCategoryCount(user.getUserid());
     }
+
+    @GetMapping("/all")
+    public Result<List<Category>> getAllCategories() {
+        return categoryService.getAllCategories();
+    }
 } 

@@ -57,7 +57,15 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
   const authStore = useAuthStore();
-  if (to.meta.requiresAuth && !authStore.user) {
+  console.log('路由守卫检查:', {
+    path: to.path,
+    requiresAuth: to.meta.requiresAuth,
+    isAuthenticated: authStore.isAuthenticated,
+    user: authStore.user
+  });
+  
+  if (to.meta.requiresAuth && !authStore.isAuthenticated) {
+    console.log('需要认证但未登录，重定向到登录页');
     next('/login');
   } else {
     next();

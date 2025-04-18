@@ -118,18 +118,17 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public Result<String> uploadCoverImage(Integer postId, MultipartFile file) {
+    public Result<String> uploadCoverImage(Integer userId, MultipartFile file) {
         try {
-            Post post = postMapper.selectById(postId);
-            if (post == null) {
-                return Result.error(404, "文章不存在");
-            }
+            String uploadDir = "uploads/posts/" + userId + "/";
+            File dir = new File(uploadDir);
+            if (!dir.exists()) dir.mkdirs();
 
-            String imageUrl = saveCoverImage(post.getUserId(), file);
-            post.setCoverImage(imageUrl);
-            postMapper.updateById(post);
+            String fileName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
+            String filePath = uploadDir + fileName;
+            file.transferTo(new File(filePath));
 
-            return Result.success(imageUrl);
+            return Result.success("/" + filePath);
         } catch (Exception e) {
             logger.error("上传封面图片失败: ", e);
             return Result.error(500, "上传封面图片失败: " + e.getMessage());

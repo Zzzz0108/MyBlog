@@ -12,4 +12,5 @@ public interface CategoryService {
     Result<List<Category>> getUserCategories(Integer userId);
     Result<Category> getCategoryById(Integer categoryId);
     Result<Integer> getUserCategoryCount(Integer userId);
+    Result<List<Category>> getAllCategories();
 } 
