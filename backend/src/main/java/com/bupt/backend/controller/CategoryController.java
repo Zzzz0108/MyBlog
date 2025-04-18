@@ -2,6 +2,7 @@ package com.bupt.backend.controller;
 
 import com.bupt.backend.common.Result;
 import com.bupt.backend.entity.Category;
+import com.bupt.backend.entity.User;
 import com.bupt.backend.service.CategoryService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,8 +22,8 @@ public class CategoryController {
 
     @PostMapping
     public Result<Category> createCategory(@RequestBody Category category, Authentication authentication) {
-        Integer userId = ((com.bupt.backend.entity.User) authentication.getPrincipal()).getUserid();
-        category.setUserId(userId);
+        User user = (User) authentication.getPrincipal();
+        category.setUserId(user.getUserid());
         return categoryService.createCategory(category);
     }
 
@@ -39,8 +40,8 @@ public class CategoryController {
 
     @GetMapping
     public Result<List<Category>> getUserCategories(Authentication authentication) {
-        Integer userId = ((com.bupt.backend.entity.User) authentication.getPrincipal()).getUserid();
-        return categoryService.getUserCategories(userId);
+        User user = (User) authentication.getPrincipal();
+        return categoryService.getUserCategories(user.getUserid());
     }
 
     @GetMapping("/{categoryId}")
@@ -50,7 +51,7 @@ public class CategoryController {
 
     @GetMapping("/count")
     public Result<Integer> getUserCategoryCount(Authentication authentication) {
-        Integer userId = ((com.bupt.backend.entity.User) authentication.getPrincipal()).getUserid();
-        return categoryService.getUserCategoryCount(userId);
+        User user = (User) authentication.getPrincipal();
+        return categoryService.getUserCategoryCount(user.getUserid());
     }
 } 

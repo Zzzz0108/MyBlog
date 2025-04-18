@@ -8,9 +8,12 @@ import com.bupt.backend.dto.RegisterRequest;
 import com.bupt.backend.entity.User;
 import com.bupt.backend.mapper.UserMapper;
 import com.bupt.backend.service.AuthService;
+import com.bupt.backend.service.JwtService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -29,13 +32,11 @@ public class AuthServiceImpl implements AuthService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Autowired
+    private JwtService jwtService;
 
-    private String generateSimpleToken(User user) {
-        return user.getUserid() + "|" + System.currentTimeMillis();
-    }
-
-
-
+    @Autowired
+    private UserDetailsService userDetailsService;
 
     @Override
     public Result<String> register(RegisterRequest request) {
@@ -77,9 +78,16 @@ public class AuthServiceImpl implements AuthService {
 
         if (user == null || !passwordEncoder.matches(request.getPassword(), user.getPassword())) {
             return Result.error(400, "用户名或密码错误");
-        };
+        }
+
+        // 获取 UserDetails
+        UserDetails userDetails = userDetailsService.loadUserByUsername(user.getUsername());
+        
+        // 生成 JWT token
+        String token = jwtService.generateToken(userDetails);
+        
         AuthResponse response = new AuthResponse();
-        response.setToken(generateSimpleToken(user));
+        response.setToken(token);
         response.setUserid(user.getUserid());
         response.setUsername(user.getUsername());
         response.setAvatar(user.getAvatar());
@@ -134,6 +142,7 @@ public class AuthServiceImpl implements AuthService {
             return Result.error(500, "头像上传失败: " + e.getMessage());
         }
     }
+
     @Override
     public User getUserById(Integer userId) {
         return userMapper.selectById(userId);

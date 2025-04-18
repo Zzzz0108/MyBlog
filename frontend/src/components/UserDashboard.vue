@@ -6,6 +6,10 @@
         <el-avatar :size="80" :src="user.avatar || defaultAvatar" />
         <h2>欢迎回来, {{ user.username }}!</h2>
         <p>您有 {{ user.postCount || 0 }} 篇创作</p>
+        <el-button type="primary" size="large" @click="$router.push('/editor')">
+          <el-icon><Edit /></el-icon>
+          开始创作
+        </el-button>
       </div>
     </div>
 
@@ -29,7 +33,7 @@
 </template>
 
 <script setup>
-import { Document, CollectionTag, Clock } from '@element-plus/icons-vue'
+import { Document, CollectionTag, Clock, Edit } from '@element-plus/icons-vue'
 import PostList from '@/components/PostList.vue'
 import { computed } from 'vue'
 
@@ -83,6 +87,16 @@ const recentPosts = [
 .welcome-content h2 {
   margin: 0.5rem 0 0;
   font-size: 1.8rem;
+}
+
+.welcome-content .el-button {
+  margin-top: 1rem;
+  padding: 0.8rem 2rem;
+  font-size: 1.1rem;
+}
+
+.welcome-content .el-button .el-icon {
+  margin-right: 0.5rem;
 }
 
 .stats-grid {

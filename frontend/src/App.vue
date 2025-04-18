@@ -1,4 +1,3 @@
-
 <template>
   <div id="app">
     <!-- 新版导航栏 -->
@@ -29,7 +28,7 @@
             <div class="user-actions" v-if="auth.user">
               <el-dropdown>
                 <div class="user-avatar">
-                  <el-avatar :size="36" :src="auth.user.avatar || ''">
+                  <el-avatar :size="36">
                     {{ (auth.user?.username || '?').charAt(0).toUpperCase() }}
                   </el-avatar>
                 </div>
@@ -133,6 +132,11 @@ const handleScroll = () => {
 
 onMounted(() => {
   window.addEventListener('scroll', handleScroll)
+  // 从 localStorage 恢复状态
+  if (localStorage.getItem('token') && localStorage.getItem('user')) {
+    auth.token = localStorage.getItem('token')
+    auth.user = JSON.parse(localStorage.getItem('user'))
+  }
 })
 
 onUnmounted(() => {
