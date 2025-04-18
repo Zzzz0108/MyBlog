@@ -27,7 +27,8 @@
     <!-- 最近创作 -->
     <div class="recent-posts">
       <h3 class="section-title">最近创作</h3>
-      <post-list :posts="recentPosts" />
+      <el-skeleton :rows="3" animated v-if="loading" />
+      <post-list v-else :posts="recentPosts" />
     </div>
   </div>
 </template>
@@ -35,7 +36,8 @@
 <script setup>
 import { Document, CollectionTag, Clock, Edit } from '@element-plus/icons-vue'
 import PostList from '@/components/PostList.vue'
-import { computed } from 'vue'
+import { computed, ref, onMounted } from 'vue'
+import { getRecentPosts } from '@/api/post'
 
 const props = defineProps({
   user: {
@@ -45,6 +47,8 @@ const props = defineProps({
 })
 
 const defaultAvatar = 'https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png'
+const recentPosts = ref([])
+const loading = ref(true)
 
 const userBannerStyle = computed(() => {
   return `linear-gradient(135deg, ${props.user.themeColor || '#8a2be2'} 0%, #a95bf1 100%)`
@@ -56,11 +60,23 @@ const userStats = [
   { icon: Clock, title: '创作天数', value: props.user.activeDays || 0, color: '#c77dff' }
 ]
 
-// 模拟最近文章数据
-const recentPosts = [
-  { id: 1, title: '我的第一篇博客', date: '2023-05-15', excerpt: '这是我的第一篇博客文章...' },
-  { id: 2, title: 'Vue3 使用技巧', date: '2023-05-10', excerpt: '分享一些Vue3的实用技巧...' }
-]
+const fetchRecentPosts = async () => {
+  try {
+    loading.value = true
+    const response = await getRecentPosts(props.user.userid, 5)
+    if (response.code === 200) {
+      recentPosts.value = response.data
+    }
+  } catch (error) {
+    console.error('获取最近文章失败:', error)
+  } finally {
+    loading.value = false
+  }
+}
+
+onMounted(() => {
+  fetchRecentPosts()
+})
 </script>
 
 <style scoped>

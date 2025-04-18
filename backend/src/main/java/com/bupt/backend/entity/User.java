@@ -20,7 +20,7 @@ import java.util.Collections;
 @TableName("users")
 public class User implements UserDetails {
     @TableId(type = IdType.AUTO)
-    private Integer userid;
+    private Long userid;
     private String username;
     private String password;
     private String email;
@@ -69,11 +69,11 @@ public class User implements UserDetails {
         return UserDetails.super.isEnabled();
     }
 
-    public Integer getUserid() {
+    public Long getUserid() {
         return userid;
     }
 
-    public void setUserid(Integer userid) {
+    public void setUserid(Long userid) {
         this.userid = userid;
     }
 

@@ -8,9 +8,9 @@ import java.util.List;
 public interface CategoryService {
     Result<Category> createCategory(Category category);
     Result<Category> updateCategory(Category category);
-    Result<Void> deleteCategory(Integer categoryId);
-    Result<List<Category>> getUserCategories(Integer userId);
-    Result<Category> getCategoryById(Integer categoryId);
-    Result<Integer> getUserCategoryCount(Integer userId);
+    Result<Void> deleteCategory(Long categoryId);
+    Result<List<Category>> getUserCategories(Long userId);
+    Result<Category> getCategoryById(Long categoryId);
+    Result<Integer> getUserCategoryCount(Long userId);
     Result<List<Category>> getAllCategories();
 } 

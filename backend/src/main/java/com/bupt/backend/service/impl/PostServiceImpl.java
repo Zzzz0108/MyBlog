@@ -71,7 +71,7 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public Result<Post> publishPost(Integer postId) {
+    public Result<Post> publishPost(Long postId) {
         try {
             Post post = postMapper.selectById(postId);
             if (post == null) {
@@ -97,7 +97,7 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public Result<Post> getPostById(Integer postId) {
+    public Result<Post> getPostById(Long postId) {
         Post post = postMapper.selectById(postId);
         if (post == null) {
             return Result.error(404, "文章不存在");
@@ -106,19 +106,19 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public Result<List<Post>> getRecentPosts(Integer userId, Integer limit) {
+    public Result<List<Post>> getRecentPosts(Long userId, Integer limit) {
         List<Post> posts = postMapper.selectRecentPosts(userId, limit);
         return Result.success(posts);
     }
 
     @Override
-    public Result<List<Post>> getPostsByCategory(Integer categoryId) {
+    public Result<List<Post>> getPostsByCategory(Long categoryId) {
         List<Post> posts = postMapper.selectByCategoryId(categoryId);
         return Result.success(posts);
     }
 
     @Override
-    public Result<String> uploadCoverImage(Integer userId, MultipartFile file) {
+    public Result<String> uploadCoverImage(Long userId, MultipartFile file) {
         try {
             String uploadDir = "uploads/posts/" + userId + "/";
             File dir = new File(uploadDir);
@@ -136,7 +136,7 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public Result<Void> incrementViewCount(Integer postId) {
+    public Result<Void> incrementViewCount(Long postId) {
         try {
             postMapper.incrementViewCount(postId);
             return Result.success();
@@ -146,7 +146,7 @@ public class PostServiceImpl implements PostService {
         }
     }
 
-    private String saveCoverImage(Integer userId, MultipartFile file) throws Exception {
+    private String saveCoverImage(Long userId, MultipartFile file) throws Exception {
         String uploadDir = "uploads/posts/" + userId + "/";
         File dir = new File(uploadDir);
         if (!dir.exists()) dir.mkdirs();

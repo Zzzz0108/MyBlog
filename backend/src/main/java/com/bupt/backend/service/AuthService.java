@@ -12,7 +12,7 @@ public interface AuthService {
     Result<String> register(RegisterRequest request);
     Result<AuthResponse> login(LoginRequest request);
     Result<User> updateUser(User user);
-    Result<String> uploadAvatar(Integer userId, MultipartFile file);
-    User getUserById(Integer userId);
+    Result<String> uploadAvatar(Long userId, MultipartFile file);
+    User getUserById(Long userId);
 }
 

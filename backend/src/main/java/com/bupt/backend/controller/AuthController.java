@@ -48,11 +48,11 @@ public class AuthController {
 
     @PostMapping("/upload-avatar")
     public Result<String> uploadAvatar(@RequestParam("file") MultipartFile file, Authentication authentication) {
-        Integer userId = ((User) authentication.getPrincipal()).getUserid();
+        Long userId = ((User) authentication.getPrincipal()).getUserid();
         return authService.uploadAvatar(userId, file);
     }
     @GetMapping("/user/{id}")
-    public Result<User> getUserById(@PathVariable Integer id) {
+    public Result<User> getUserById(@PathVariable Long id) {
         User user = authService.getUserById(id);
         return Result.success(user);
     }

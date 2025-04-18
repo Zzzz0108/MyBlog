@@ -115,7 +115,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public Result<String> uploadAvatar(Integer userId, MultipartFile file) {
+    public Result<String> uploadAvatar(Long userId, MultipartFile file) {
         try {
             User user = userMapper.selectById(userId);
             if (user == null) {
@@ -144,7 +144,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public User getUserById(Integer userId) {
+    public User getUserById(Long userId) {
         return userMapper.selectById(userId);
     }
 

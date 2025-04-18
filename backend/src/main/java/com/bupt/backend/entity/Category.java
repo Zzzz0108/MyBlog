@@ -12,10 +12,15 @@ import java.time.LocalDateTime;
 @TableName("categories")
 public class Category {
     @TableId(type = IdType.AUTO)
-    private Integer categoryId;
-    private Integer userId;  // 分类所属用户
+    private Long categoryId;
+    
+    @TableField("user_id")
+    private Long userId;  // 分类所属用户
+    
     private String name;     // 分类名称
     private String description; // 分类描述
+    
+    @TableField("post_count")
     private Integer postCount; // 该分类下的文章数
 
     @TableField("create_at")

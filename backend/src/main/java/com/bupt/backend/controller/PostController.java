@@ -26,41 +26,41 @@ public class PostController {
     }
 
     @PutMapping("/{postId}")
-    public Result<Post> updatePost(@PathVariable Integer postId, @RequestBody Post post, 
+    public Result<Post> updatePost(@PathVariable Long postId, @RequestBody Post post, 
                                  @RequestParam(value = "coverImage", required = false) MultipartFile coverImage) {
         post.setPostId(postId);
         return postService.updatePost(post, coverImage);
     }
 
     @PostMapping("/{postId}/publish")
-    public Result<Post> publishPost(@PathVariable Integer postId) {
+    public Result<Post> publishPost(@PathVariable Long postId) {
         return postService.publishPost(postId);
     }
 
     @GetMapping("/{postId}")
-    public Result<Post> getPost(@PathVariable Integer postId) {
+    public Result<Post> getPost(@PathVariable Long postId) {
         return postService.getPostById(postId);
     }
 
     @GetMapping("/recent")
     public Result<List<Post>> getRecentPosts(Authentication authentication) {
-        Integer userId = ((com.bupt.backend.entity.User) authentication.getPrincipal()).getUserid();
+        Long userId = ((com.bupt.backend.entity.User) authentication.getPrincipal()).getUserid();
         return postService.getRecentPosts(userId, 2);
     }
 
     @GetMapping("/category/{categoryId}")
-    public Result<List<Post>> getPostsByCategory(@PathVariable Integer categoryId) {
+    public Result<List<Post>> getPostsByCategory(@PathVariable Long categoryId) {
         return postService.getPostsByCategory(categoryId);
     }
 
     @PostMapping("/cover")
     public Result<String> uploadCoverImage(@RequestParam("file") MultipartFile file, Authentication authentication) {
-        Integer userId = ((com.bupt.backend.entity.User) authentication.getPrincipal()).getUserid();
+        Long userId = ((com.bupt.backend.entity.User) authentication.getPrincipal()).getUserid();
         return postService.uploadCoverImage(userId, file);
     }
 
     @PostMapping("/{postId}/view")
-    public Result<Void> incrementViewCount(@PathVariable Integer postId) {
+    public Result<Void> incrementViewCount(@PathVariable Long postId) {
         return postService.incrementViewCount(postId);
     }
 } 

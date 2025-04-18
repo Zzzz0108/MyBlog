@@ -13,6 +13,16 @@
         <result column="like_count" property="likeCount"/>
     </resultMap>
 
+    <insert id="insert" parameterType="com.bupt.backend.entity.Post" useGeneratedKeys="true" keyProperty="postId">
+        INSERT INTO posts (
+            title, content, cover_image, status, user_id, category_id,
+            view_count, like_count, create_at, update_at
+        ) VALUES (
+            #{title}, #{content}, #{coverImage}, #{status}, #{userId}, #{categoryId},
+            #{viewCount}, #{likeCount}, #{createAt}, #{updateAt}
+        )
+    </insert>
+
     <select id="selectPublishedPosts" resultMap="BaseResultMap">
         SELECT * FROM posts
         <where>

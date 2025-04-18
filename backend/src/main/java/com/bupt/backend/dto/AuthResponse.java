@@ -1,12 +1,11 @@
 package com.bupt.backend.dto;
 
-
 import lombok.Data;
 
 @Data
 public class AuthResponse {
     private String token;
-    private Integer userid;
+    private Long userid;
     private String username;
     private String avatar;
     private String email;
@@ -23,11 +22,11 @@ public class AuthResponse {
         this.token = token;
     }
 
-    public Integer getUserid() {
+    public Long getUserid() {
         return userid;
     }
 
-    public void setUserid(Integer userid) {
+    public void setUserid(Long userid) {
         this.userid = userid;
     }
 

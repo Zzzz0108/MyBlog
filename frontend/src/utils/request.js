@@ -15,10 +15,9 @@ service.interceptors.request.use(
     const token = localStorage.getItem('token')
     if (token) {
       try {
-        // 确保 token 格式正确
-        const formattedToken = token.startsWith('Bearer ') ? token : `Bearer ${token}`
-        config.headers['Authorization'] = formattedToken
-        console.log('发送请求，Authorization header:', formattedToken)
+        // 直接使用token，不添加Bearer前缀
+        config.headers['Authorization'] = token
+        console.log('发送请求，Authorization header:', token)
       } catch (error) {
         console.error('Token处理错误:', error)
       }

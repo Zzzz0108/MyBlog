@@ -28,13 +28,13 @@ public class CategoryController {
     }
 
     @PutMapping("/{categoryId}")
-    public Result<Category> updateCategory(@PathVariable Integer categoryId, @RequestBody Category category) {
+    public Result<Category> updateCategory(@PathVariable Long categoryId, @RequestBody Category category) {
         category.setCategoryId(categoryId);
         return categoryService.updateCategory(category);
     }
 
     @DeleteMapping("/{categoryId}")
-    public Result<Void> deleteCategory(@PathVariable Integer categoryId) {
+    public Result<Void> deleteCategory(@PathVariable Long categoryId) {
         return categoryService.deleteCategory(categoryId);
     }
 
@@ -45,7 +45,7 @@ public class CategoryController {
     }
 
     @GetMapping("/{categoryId}")
-    public Result<Category> getCategory(@PathVariable Integer categoryId) {
+    public Result<Category> getCategory(@PathVariable Long categoryId) {
         return categoryService.getCategoryById(categoryId);
     }
 

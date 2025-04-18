@@ -54,4 +54,15 @@ export function uploadCover(data) {
     },
     data
   })
+}
+
+export function getRecentPosts(userId, limit) {
+  return request({
+    url: '/posts/recent',
+    method: 'get',
+    params: {
+      userId,
+      limit
+    }
+  })
 } 

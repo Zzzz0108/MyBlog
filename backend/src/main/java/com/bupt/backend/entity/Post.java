@@ -12,9 +12,9 @@ import java.time.LocalDateTime;
 @TableName("posts")
 public class Post {
     @TableId(type = IdType.AUTO)
-    private Integer postId;
-    private Integer userId;    // 文章作者
-    private Integer categoryId; // 文章分类
+    private Long postId;
+    private Long userId;    // 文章作者
+    private Long categoryId; // 文章分类
     private String title;      // 文章标题
     private String content;    // 文章内容
     private String coverImage; // 封面图片

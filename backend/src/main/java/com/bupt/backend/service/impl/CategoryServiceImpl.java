@@ -51,7 +51,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public Result<Void> deleteCategory(Integer categoryId) {
+    public Result<Void> deleteCategory(Long categoryId) {
         try {
             Category category = categoryMapper.selectById(categoryId);
             if (category == null) {
@@ -67,7 +67,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public Result<List<Category>> getUserCategories(Integer userId) {
+    public Result<List<Category>> getUserCategories(Long userId) {
         try {
             List<Category> categories = categoryMapper.selectByUserId(userId);
             return Result.success(categories);
@@ -78,7 +78,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public Result<Category> getCategoryById(Integer categoryId) {
+    public Result<Category> getCategoryById(Long categoryId) {
         Category category = categoryMapper.selectById(categoryId);
         if (category == null) {
             return Result.error(404, "分类不存在");
@@ -87,7 +87,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public Result<Integer> getUserCategoryCount(Integer userId) {
+    public Result<Integer> getUserCategoryCount(Long userId) {
         try {
             Integer count = categoryMapper.countByUserId(userId);
             return Result.success(count);

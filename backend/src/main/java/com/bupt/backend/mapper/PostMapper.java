@@ -13,14 +13,14 @@ import java.util.List;
 @Mapper
 public interface PostMapper extends BaseMapper<Post> {
     @Select("SELECT * FROM posts WHERE user_id = #{userId} AND status = 'published' ORDER BY publish_at DESC LIMIT #{limit}")
-    List<Post> selectRecentPosts(Integer userId, Integer limit);
+    List<Post> selectRecentPosts(Long userId, Integer limit);
 
     @Select("SELECT * FROM posts WHERE category_id = #{categoryId} AND status = 'published' ORDER BY publish_at DESC")
-    List<Post> selectByCategoryId(Integer categoryId);
+    List<Post> selectByCategoryId(Long categoryId);
 
     @Select("SELECT COUNT(*) FROM posts WHERE user_id = #{userId} AND status = 'published'")
-    Integer countPublishedPosts(Integer userId);
+    Integer countPublishedPosts(Long userId);
 
     @Update("UPDATE posts SET view_count = view_count + 1 WHERE post_id = #{postId}")
-    int incrementViewCount(Integer postId);
+    int incrementViewCount(Long postId);
 }

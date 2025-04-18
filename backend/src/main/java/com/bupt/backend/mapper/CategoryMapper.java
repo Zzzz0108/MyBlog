@@ -10,8 +10,8 @@ import java.util.List;
 @Mapper
 public interface CategoryMapper extends BaseMapper<Category> {
     @Select("SELECT * FROM categories WHERE user_id = #{userId} ORDER BY create_at DESC")
-    List<Category> selectByUserId(Integer userId);
+    List<Category> selectByUserId(Long userId);
 
     @Select("SELECT COUNT(*) FROM categories WHERE user_id = #{userId}")
-    Integer countByUserId(Integer userId);
+    Integer countByUserId(Long userId);
 } 
